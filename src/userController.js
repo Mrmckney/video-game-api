@@ -65,7 +65,7 @@ export const addFavorite = async (req, res) => {
     const db = dbConnect()
     await db.collection('users').findOneAndUpdate({'username': decoded.user.username}, {$addToSet: {favorites: req.body}}).catch(err => {
         res.status(500).send({
-            message: err.message,
+            message: 'Could not add',
             status: 500
         })
         return
@@ -90,13 +90,18 @@ export const getFavorites = async (req, res) => {
     const db = dbConnect()
     const data = await db.collection('users').findOne({'username': decoded.user.username}).catch(err => {
         res.status(500).send({
-            message: err.message,
+            message: 'Could not get',
             status: 500
         })
         return
     })
-    data.password = null
-    data.username = null
+    if (data.password) {
+        data.password = undefined
+
+    }
+    if (data.userName) {
+        data.username = undefined
+    }
     res.send(data)
 }
 
@@ -114,20 +119,12 @@ export const removeFav = async (req, res) => {
     const db = dbConnect()
     await db.collection('users').findOneAndUpdate({'username': decoded.user.username}, {$pull: {favorites: req.body}}).catch(err => {
         res.status(500).send({
-            message: err.message,
-            status: 500
-        })
-        return
-    })
-    const data = db.collection('users').findOne({'username': decoded.user.username}).catch(err => {
-        res.status(500).send({
-            message: err.message,
+            message: 'Could not remove',
             status: 500
         })
         return
     })
     res.send({
         message: 'Removed Favorite',
-        favorites: data.favorites
     })
 }

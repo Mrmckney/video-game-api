@@ -22,3 +22,15 @@ export const getSearchResults = async (req, res) => {
     })
     res.send(searchResults)
 }
+
+export const getTopRated = async (req, res) => {
+  const db = dbConnect() 
+  const results = await db.collection('games').find({}).sort({ratings_count: -1}).limit(100).toArray().catch(() => {
+    res.status(500).send({
+        message: 'Could not fetch games',
+        status: 500
+    })
+    return
+  })
+  res.send(results)
+}
