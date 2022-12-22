@@ -24,6 +24,17 @@ app.listen('4000', () => {
     console.log('our app is listening on port 4000')
 })
 
+// async function deleteGames() {
+//     const db = dbConnect()
+//     const ok = db.collection('games').deleteMany({rating: 0, suggestions_count: 0})
+//     return ok
+// }
+
+// app.get('/remove', (req, res) => {
+//     deleteGames()
+//     res.send('ok')
+// })
+
 // async function getGames(page) {
 //     const data = await fetch(`https://api.rawg.io/api/games?key=${API_KEY}&page=${page}&page_size=40`)
 //     const gameResults = await data.json()

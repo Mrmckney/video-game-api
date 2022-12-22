@@ -13,13 +13,16 @@ export const createUser = async (req, res) => {
         })
         return
     })
-    const token = jwt.sign({user}, secret)
-    res.send({
-        message: "User created successfully",
-        status: 200,
-        username: userName,
-        token
-    })
+    if (user?.acknowledged) {
+        const token = jwt.sign({user}, secret)
+        res.send({
+            message: "User created successfully",
+            status: 200,
+            username: userName,
+            token
+        })
+        return
+    }
 }
 
 export const loginUser = async (req, res) => {
@@ -41,6 +44,7 @@ export const loginUser = async (req, res) => {
     if (user && user.password === req.body.password) {
         let responseData = user
         responseData.password = undefined
+        responseData.favorites = undefined
         const token = jwt.sign({user}, secret)
         res.status(200).send({
             message: "User login successful",

@@ -1,7 +1,7 @@
 import dbConnect from "../dbConnect.js";
 
+const db = dbConnect();
 export const getSearchResults = async (req, res) => {
-    const db = dbConnect();
     const searchResults = await db.collection("games").aggregate([
         {
           $search: {
@@ -24,7 +24,6 @@ export const getSearchResults = async (req, res) => {
 }
 
 export const getTopRated = async (req, res) => {
-  const db = dbConnect() 
   const results = await db.collection('games').find({}).sort({ratings_count: -1}).limit(100).toArray().catch(() => {
     res.status(500).send({
         message: 'Could not fetch games',
