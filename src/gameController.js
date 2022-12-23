@@ -21,9 +21,10 @@ export const getSearchResults = async (req, res) => {
         return
     })
     res.send(searchResults)
+    return
 }
 
-export const getTopRated = async (req, res) => {
+export const getMostPlayed = async (req, res) => {
   const results = await db.collection('games').find({}).sort({ratings_count: -1}).limit(100).toArray().catch(() => {
     res.status(500).send({
         message: 'Could not fetch games',
@@ -32,4 +33,29 @@ export const getTopRated = async (req, res) => {
     return
   })
   res.send(results)
+  return
+}
+
+export const getTopSuggested = async (req, res) => {
+  const results = await db.collection('games').find({}).sort({'ratings.0.count': 'descending'}).limit(100).toArray().catch(() => {
+    res.status(500).send({
+        message: 'Could not fetch games',
+        status: 500
+    })
+    return
+  })
+  res.send(results)
+  return
+}
+
+export const getTopRated = async (req, res) => {
+  const results = await db.collection('games').find({esrb_rating: {$ne:null}}).sort({rating: -1}).limit(100).toArray().catch(() => {
+    res.status(500).send({
+        message: 'Could not fetch games',
+        status: 500
+    })
+    return
+  })
+  res.send(results)
+  return
 }

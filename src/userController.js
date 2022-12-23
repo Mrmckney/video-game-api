@@ -2,10 +2,11 @@ import dbConnect from '../dbConnect.js'
 import jwt from 'jsonwebtoken'
 import {secret} from '../secrets.js'
 
+const db = dbConnect()
+
 export const createUser = async (req, res) => {
     req.body.favorites = []
     const userName = req.body.username
-    const db = dbConnect()
     const user = await db.collection('users').insertOne(req.body).catch(err => {
         res.status(500).send({
             message: 'User creation failed',
@@ -14,6 +15,8 @@ export const createUser = async (req, res) => {
         return
     })
     if (user?.acknowledged) {
+        user.username = req.body.username
+        user.password = req.body.password
         const token = jwt.sign({user}, secret)
         res.send({
             message: "User created successfully",
@@ -26,7 +29,6 @@ export const createUser = async (req, res) => {
 }
 
 export const loginUser = async (req, res) => {
-    const db = dbConnect()
     const user = await db.collection('users').findOne({username: req.body.username}).catch(err => {
         res.status(500).send({
             message: 'Login Attempt Failed',
@@ -66,7 +68,6 @@ export const addFavorite = async (req, res) => {
         return
     }
     const decoded = jwt.verify(token, secret)
-    const db = dbConnect()
     await db.collection('users').findOneAndUpdate({'username': decoded.user.username}, {$addToSet: {favorites: req.body}}).catch(err => {
         res.status(500).send({
             message: 'Could not add',
@@ -78,6 +79,7 @@ export const addFavorite = async (req, res) => {
         message: "Favorite added",
         status: 200
     })
+    return
 }
 
 export const getFavorites = async (req, res) => {
@@ -91,7 +93,6 @@ export const getFavorites = async (req, res) => {
         return
     }
     const decoded = jwt.verify(token, secret)
-    const db = dbConnect()
     const data = await db.collection('users').findOne({'username': decoded.user.username}).catch(err => {
         res.status(500).send({
             message: 'Could not get',
@@ -99,14 +100,15 @@ export const getFavorites = async (req, res) => {
         })
         return
     })
-    if (data.password) {
+    if (data?.password) {
         data.password = undefined
 
     }
-    if (data.userName) {
+    if (data?.userName) {
         data.username = undefined
     }
     res.send(data)
+    return
 }
 
 export const removeFav = async (req, res) => {
@@ -120,7 +122,6 @@ export const removeFav = async (req, res) => {
         return
     }
     const decoded = jwt.verify(token, secret)
-    const db = dbConnect()
     await db.collection('users').findOneAndUpdate({'username': decoded.user.username}, {$pull: {favorites: req.body}}).catch(err => {
         res.status(500).send({
             message: 'Could not remove',
@@ -131,4 +132,5 @@ export const removeFav = async (req, res) => {
     res.send({
         message: 'Removed Favorite',
     })
+    return
 }
