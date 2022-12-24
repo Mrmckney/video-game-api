@@ -2,7 +2,7 @@ import express from 'express'
 import cors from 'cors'
 import fetch from 'node-fetch'
 import { API_KEY } from './secrets.js'
-import { getMostPlayed, getSearchResults, getTopRated, getTopSuggested } from './src/gameController.js'
+import { getGame, getMostPlayed, getPreset, getSearchResults, getTopRated, getTopSuggested } from './src/gameController.js'
 import { getFavorites, loginUser, createUser, removeFav, addFavorite } from './src/userController.js'
 import dbConnect from "./dbConnect.js";
 
@@ -10,11 +10,15 @@ const app = express()
 app.use(cors())
 app.use(express.json())
 
-app.get('/search/:name', getSearchResults)
+// games
 app.get('/mostplayed' , getMostPlayed)
 app.get('/topsuggested', getTopSuggested)
 app.get('/toprated', getTopRated)
+app.get('/game/:slug', getGame)
+app.get('/search/:name', getSearchResults)
+app.get('/preset', getPreset)
 
+// user 
 app.get('/favorites', getFavorites)
 app.post('/signup', createUser)
 app.post('/login', loginUser)

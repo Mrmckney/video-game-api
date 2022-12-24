@@ -24,6 +24,37 @@ export const getSearchResults = async (req, res) => {
     return
 }
 
+export const getPreset = async (req, res) => {
+  const results = await db.collection('games').find({}).limit(50).toArray().catch(() => {
+    res.status(500).send({
+        message: 'Could not fetch games',
+        status: 500
+    })
+    return
+  })
+  const change = await results.map((result) => {
+    return {
+      title: result.slug,
+      image: result.background_image
+    }
+  })
+  res.send(change)
+  return
+}
+
+export const getGame = async (req, res) => {
+  const { slug } = req.params
+  const results = await db.collection('games').findOne({slug}).catch(() => {
+    res.status(500).send({
+        message: 'Could not fetch games',
+        status: 500
+    })
+    return
+  })
+  res.send(results)
+  return
+}
+
 export const getMostPlayed = async (req, res) => {
   const results = await db.collection('games').find({}).sort({ratings_count: -1}).limit(100).toArray().catch(() => {
     res.status(500).send({
