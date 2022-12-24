@@ -25,7 +25,7 @@ export const getSearchResults = async (req, res) => {
 }
 
 export const getPreset = async (req, res) => {
-  const results = await db.collection('games').find({}).limit(50).toArray().catch(() => {
+  const results = await db.collection('games').find({background_image: {$ne:null}}).limit(50).toArray().catch(() => {
     res.status(500).send({
         message: 'Could not fetch games',
         status: 500
