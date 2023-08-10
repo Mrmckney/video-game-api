@@ -27,6 +27,8 @@ app.listen('4000', () => {
     console.log('our app is listening on port 4000')
 })
 
+export default app
+
 // async function deleteGames() {
 //     const db = dbConnect()
 //     const ok = db.collection('games').deleteMany({rating: 0, suggestions_count: 0})
