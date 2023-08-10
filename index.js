@@ -7,20 +7,24 @@ const app = express()
 app.use(cors())
 app.use(express.json())
 
+app.get("/", (req, res) => {
+    res.send("Hello World")
+})
+
 // games
-app.get('/mostplayed' , getMostPlayed)
-app.get('/topsuggested', getTopSuggested)
-app.get('/toprated', getTopRated)
-app.get('/game/:slug', getGame)
-app.get('/search/:name', getSearchResults)
-app.get('/preset', getPreset)
+app.get('/api/mostplayed' , getMostPlayed)
+app.get('/api/topsuggested', getTopSuggested)
+app.get('/api/toprated', getTopRated)
+app.get('/api/game/:slug', getGame)
+app.get('/api/search/:name', getSearchResults)
+app.get('/api/preset', getPreset)
 
 // user 
-app.get('/favorites', getFavorites)
-app.post('/signup', createUser)
-app.post('/login', loginUser)
-app.patch('/addfav', addFavorite)
-app.patch('/removefav', removeFav)
+app.get('/api/favorites', getFavorites)
+app.post('/api/signup', createUser)
+app.post('/api/login', loginUser)
+app.patch('/api/addfav', addFavorite)
+app.patch('/api/removefav', removeFav)
 
 
 app.listen('4000', () => {
