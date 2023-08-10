@@ -57,16 +57,14 @@ export const getGame = async (req, res) => {
   return
 }
 
-export const getMostPlayed = async (req, res) => {
-  const results = await db.collection('games').find({}).sort({ ratings_count: -1 }).limit(100).toArray().catch(() => {
+export const getMostPlayed = (req, res) => {
+  db.collection('games').find({}).sort({ ratings_count: -1 }).limit(100)
+  .then((data) => res.send(data)).catch(() => {
     res.status(500).send({
       message: 'Could not fetch games',
       status: 500
     })
-    return
   })
-  res.send(results)
-  return
 }
 
 export const getTopSuggested = async (req, res) => {
