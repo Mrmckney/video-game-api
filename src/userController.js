@@ -1,6 +1,6 @@
 import dbConnect from '../dbConnect.js'
 import jwt from 'jsonwebtoken'
-import {secret} from '../secrets.js'
+import 'dotenv/config'
 
 const db = dbConnect()
 
@@ -17,7 +17,7 @@ export const createUser = async (req, res) => {
     if (user?.acknowledged) {
         user.username = req.body.username
         user.password = req.body.password
-        const token = jwt.sign({user}, secret)
+        const token = jwt.sign({user}, process.env.SECRET)
         res.send({
             message: "User created successfully",
             status: 200,
@@ -47,7 +47,7 @@ export const loginUser = async (req, res) => {
         let responseData = user
         responseData.password = undefined
         responseData.favorites = undefined
-        const token = jwt.sign({user}, secret)
+        const token = jwt.sign({user}, process.env.SECRET)
         res.status(200).send({
             message: "User login successful",
             status: 200,
@@ -67,7 +67,7 @@ export const addFavorite = async (req, res) => {
         })
         return
     }
-    const decoded = jwt.verify(token, secret)
+    const decoded = jwt.verify(token, process.env.SECRET)
     await db.collection('users').findOneAndUpdate({'username': decoded.user.username}, {$addToSet: {favorites: req.body}}).catch(err => {
         res.status(500).send({
             message: 'Could not add',
@@ -92,7 +92,7 @@ export const getFavorites = async (req, res) => {
         })
         return
     }
-    const decoded = jwt.verify(token, secret)
+    const decoded = jwt.verify(token, process.env.SECRET)
     const data = await db.collection('users').findOne({'username': decoded.user.username}).catch(err => {
         res.status(500).send({
             message: 'Could not get',
@@ -121,7 +121,7 @@ export const removeFav = async (req, res) => {
         })
         return
     }
-    const decoded = jwt.verify(token, secret)
+    const decoded = jwt.verify(token, process.env.SECRET)
     await db.collection('users').findOneAndUpdate({'username': decoded.user.username}, {$pull: {favorites: req.body}}).catch(err => {
         res.status(500).send({
             message: 'Could not remove',
