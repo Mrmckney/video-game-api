@@ -1,10 +1,7 @@
 import express from 'express'
 import cors from 'cors'
-import fetch from 'node-fetch'
-import { API_KEY } from './secrets.js'
 import { getGame, getMostPlayed, getPreset, getSearchResults, getTopRated, getTopSuggested } from './src/gameController.js'
 import { getFavorites, loginUser, createUser, removeFav, addFavorite } from './src/userController.js'
-import dbConnect from "./dbConnect.js";
 
 const app = express()
 app.use(cors())
