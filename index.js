@@ -1,7 +1,7 @@
 import express from 'express'
 import cors from 'cors'
 import { getGame, getMostPlayed, getPreset, getSearchResults, getTopRated, getTopSuggested } from './src/gameController.js'
-import { getFavorites, loginUser, createUser, removeFav, addFavorite } from './src/userController.js'
+import { getFavorites, loginUser, removeFav, addFavorite } from './src/userController.js'
 
 const app = express()
 app.use(cors())
@@ -21,7 +21,7 @@ app.get('/preset', getPreset)
 
 // user 
 app.get('/favorites', getFavorites)
-app.post('/signup', createUser)
+// app.post('/signup', createUser)
 app.post('/login', loginUser)
 app.patch('/addfav', addFavorite)
 app.patch('/removefav', removeFav)

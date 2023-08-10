@@ -4,29 +4,29 @@ import 'dotenv/config'
 
 const db = dbConnect()
 
-export const createUser = async (req, res) => {
-    req.body.favorites = []
-    const userName = req.body.username
-    const user = await db.collection('users').insertOne(req.body).catch(err => {
-        res.status(500).send({
-            message: 'User creation failed',
-            status: 500
-        })
-        return
-    })
-    if (user?.acknowledged) {
-        user.username = req.body.username
-        user.password = req.body.password
-        const token = jwt.sign({user}, process.env.SECRET)
-        res.send({
-            message: "User created successfully",
-            status: 200,
-            username: userName,
-            token
-        })
-        return
-    }
-}
+// export const createUser = async (req, res) => {
+//     req.body.favorites = []
+//     const userName = req.body.username
+//     const user = await db.collection('users').insertOne(req.body).catch(err => {
+//         res.status(500).send({
+//             message: 'User creation failed',
+//             status: 500
+//         })
+//         return
+//     })
+//     if (user?.acknowledged) {
+//         user.username = req.body.username
+//         user.password = req.body.password
+//         const token = jwt.sign({user}, process.env.SECRET)
+//         res.send({
+//             message: "User created successfully",
+//             status: 200,
+//             username: userName,
+//             token
+//         })
+//         return
+//     }
+// }
 
 export const loginUser = async (req, res) => {
     const user = await db.collection('users').findOne({username: req.body.username}).catch(err => {
