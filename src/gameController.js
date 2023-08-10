@@ -92,3 +92,7 @@ export const getTopRated = async (req, res) => {
   res.send(results)
   return
 }
+
+export const test = async (req, res) => {
+  res.send('we got here')
+}

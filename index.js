@@ -1,6 +1,6 @@
 import express from 'express'
 import cors from 'cors'
-import { getGame, getMostPlayed, getPreset, getSearchResults, getTopRated, getTopSuggested } from './src/gameController.js'
+import { getGame, getMostPlayed, getPreset, getSearchResults, getTopRated, getTopSuggested, test } from './src/gameController.js'
 import { getFavorites, loginUser, createUser, removeFav, addFavorite } from './src/userController.js'
 
 const app = express()
@@ -10,6 +10,8 @@ app.use(express.json())
 app.get("/", (req, res) => {
     res.send("Hello World")
 })
+
+app.get("/test", test)
 
 // games
 app.get('/mostplayed' , getMostPlayed)
