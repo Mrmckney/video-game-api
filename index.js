@@ -11,8 +11,6 @@ app.get("/", (req, res) => {
     res.send("Hello World")
 })
 
-app.get("/test", test)
-
 // games
 app.get('/mostplayed' , getMostPlayed)
 app.get('/topsuggested', getTopSuggested)
