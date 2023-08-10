@@ -9,8 +9,15 @@ const app = express()
 app.use(cors())
 app.use(express.json())
 
-app.get("/", (req, res) => {
-    res.send(db)
+app.get("/", async (req, res) => {
+    const results = await db.collection('games').find({}).sort({ ratings_count: -1 }).limit(100).toArray().catch(() => {
+        res.status(500).send({
+          message: 'Could not fetch games',
+          status: 500
+        })
+        return
+      })
+      res.send(results)
 })
 
 // games
