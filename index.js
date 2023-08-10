@@ -2,7 +2,9 @@ import express from 'express'
 import cors from 'cors'
 import { getGame, getMostPlayed, getPreset, getSearchResults, getTopRated, getTopSuggested } from './src/gameController.js'
 import { getFavorites, loginUser, createUser, removeFav, addFavorite } from './src/userController.js'
+import dbConnect from './dbConnect.js'
 
+const db = dbConnect();
 const app = express()
 app.use(cors())
 app.use(express.json())
@@ -12,19 +14,27 @@ app.get("/", (req, res) => {
 })
 
 // games
-app.get('/api/mostplayed' , getMostPlayed)
-app.get('/api/topsuggested', getTopSuggested)
-app.get('/api/toprated', getTopRated)
-app.get('/api/game/:slug', getGame)
-app.get('/api/search/:name', getSearchResults)
-app.get('/api/preset', getPreset)
+app.get('/mostplayed' , async (req, res) => {
+    const results = await db.collection('games').find({}).sort({ ratings_count: -1 }).limit(100).toArray().catch(() => {
+      res.status(500).send({
+        message: 'Could not fetch games',
+        status: 500
+      })
+      return
+    })
+    res.send(results)})
+app.get('/topsuggested', getTopSuggested)
+app.get('/toprated', getTopRated)
+app.get('/game/:slug', getGame)
+app.get('/search/:name', getSearchResults)
+app.get('/preset', getPreset)
 
 // user 
-app.get('/api/favorites', getFavorites)
-app.post('/api/signup', createUser)
-app.post('/api/login', loginUser)
-app.patch('/api/addfav', addFavorite)
-app.patch('/api/removefav', removeFav)
+app.get('/favorites', getFavorites)
+app.post('/signup', createUser)
+app.post('/login', loginUser)
+app.patch('/addfav', addFavorite)
+app.patch('/removefav', removeFav)
 
 
 app.listen('4000', () => {
